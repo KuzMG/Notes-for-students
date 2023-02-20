@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from openpyxl.reader.excel import load_workbook
 
-from DataClasses import Schedule, Location, Institute
+from DataClasses import ScheduleXls, Location, Institute, Schedule, DaysOfWeek, PairNumber, ParityOfWeek, Pair
 
 if not os.path.exists("schedule.xlsx"):
     URL = "https://www.mirea.ru/schedule/"
@@ -16,10 +16,10 @@ if not os.path.exists("schedule.xlsx"):
     qualification = ["бакалавриат/специалитет", "магистратура", "аспирантура", "", ""]
     a = 0
     for qualif in scheduleMirea:
-        if (a == 3):
+        if a == 3:
             break
         a += 1
-        schedule.append(Schedule(qualification[len(schedule)], []))
+        schedule.append(ScheduleXls(qualification[len(schedule)], []))
         for inst in qualif.find().find_all(recursive=False):
             if (not inst.find(class_="uk-text-bold")) or inst.find(
                     class_="uk-text-bold").text == "Филиал в городе Ставрополе":
@@ -33,12 +33,40 @@ if not os.path.exists("schedule.xlsx"):
                     continue
                 schedule[-1].institutes[-1].location[-1].courses.append(
                     course.find(class_='uk-link-toggle').get("href"))
-    req = requests.get(schedule[0].institutes[0].location[0].courses[0])
+    req = requests.get(schedule[0].institutes[4].location[0].courses[1])
     file = open("schedule.xlsx", "wb")
     file.write(req.content)
 
 wb = load_workbook('schedule.xlsx')
 ws = wb[wb.sheetnames[0]]
-for row in ws.values:
-    for value in row:
-        print(value)
+scheduleOfTheGroups = []
+daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
+for i in range(0, ws.max_column // 5):
+    if (i + 1) % 3 == 0:
+        continue
+    scheduleOfTheGroups.append(Schedule('', []))
+    a = 1
+    day = 0
+    pairNumber = 1
+    for row in ws.iter_rows(min_row=2, max_row=87, min_col=6 + 5 * i, max_col=9 + 5 * i, values_only=True):
+        if a == 1:
+            scheduleOfTheGroups[-1].group = row[0]
+            a += 1
+            continue
+        if a == 2:
+            a += 1
+            continue
+        if (a - 3) % 14 == 0:
+            pairNumber = 1
+            scheduleOfTheGroups[-1].dayOfWeek.append(DaysOfWeek(daysOfWeek[day], []))
+            day += 1
+        if (a - 3) % 2 == 0:
+            scheduleOfTheGroups[-1].dayOfWeek[-1].pairNumber.append(PairNumber(pairNumber, []))
+            scheduleOfTheGroups[-1].dayOfWeek[-1].pairNumber[-1].parityOfWeek.append(
+                ParityOfWeek(True, Pair(row[0], row[1], row[2], row[3])))
+            pairNumber += 1
+        else:
+            scheduleOfTheGroups[-1].dayOfWeek[-1].pairNumber[-1].parityOfWeek.append(
+                ParityOfWeek(True, Pair(row[0], row[1], row[2], row[3])))
+        a += 1
+print(scheduleOfTheGroups)
