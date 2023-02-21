@@ -1,5 +1,5 @@
 import sys
-from MireaSchedule import open_window as openMireaSchedule
+import MireaSchedule
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QPushButton
 from qtpy import uic
@@ -12,7 +12,7 @@ manuallyButton = ui.findChild(QPushButton, "addManuallyButton")
 
 
 def the_button_was_clicked():
-    openMireaSchedule()
+    MireaSchedule.open_window()
     ui.close()
 
 

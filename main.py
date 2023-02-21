@@ -1,12 +1,12 @@
 import sys
 
 from PyQt6.QtWidgets import QApplication
-from AddingSchedule import open_window as openAddingSchedule
+import AddingSchedule
 
 
 def main():
     app = QApplication(sys.argv)
-    openAddingSchedule()
+    AddingSchedule.open_window()
     app.exec()
 
 
