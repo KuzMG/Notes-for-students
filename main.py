@@ -1,17 +1,13 @@
 import sys
 
-from PyQt6 import uic
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QPushButton
+from PyQt6.QtWidgets import QApplication
+from AddingSchedule import open_window as openAddingSchedule
 
-app = QApplication(sys.argv)
 
-ui = uic.loadUi("Form1.ui")
-closeButton = ui.findChild(QPushButton, "closeButton")
-closeButton.clicked.connect(app.quit)
+def main():
+    app = QApplication(sys.argv)
+    openAddingSchedule()
+    app.exec()
 
-ui.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-ui.setWindowFlags(Qt.WindowType.FramelessWindowHint)
 
-ui.show()
-app.exec()
+if __name__ == '__main__': main()

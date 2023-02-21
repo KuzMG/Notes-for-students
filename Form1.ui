@@ -25,8 +25,8 @@
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>100</y>
+     <x>40</x>
+     <y>110</y>
      <width>400</width>
      <height>300</height>
     </rect>
@@ -41,7 +41,7 @@
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 75, 0, 255), stop:1 rgba(0, 27, 2, 255));
+    <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 60, 0, 255), stop:1 rgba(0, 90, 0, 255));
 border-radius: 15px;
 </string>
    </property>
@@ -216,7 +216,7 @@ max-height: 35px;
      <string>RTU MIREA</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="addManualyButton">
+   <widget class="QPushButton" name="addManuallyButton">
     <property name="geometry">
      <rect>
       <x>100</x>
@@ -244,13 +244,13 @@ max-height: 35px;
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">#addManualyButton{
+     <string notr="true">#addManuallyButton{
 background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 120, 0, 255), stop:1 rgba(0, 54, 4, 255));
 border-radius: 15;
 color: rgb(217, 217, 217);
 border: 2px solid rgb(255, 255, 255);
 }
-#addManualyButton:hover
+#addManuallyButton:hover
 {
 background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 120, 0, 255), stop:1 rgba(0, 54, 4, 255));
 border-radius: 15;
@@ -258,16 +258,12 @@ height: 20px;
 color: rgb(0, 0, 0);
 border: 1px solid rgb(255, 255, 255);
 }
-#addManualyButton:pressed
+#addManuallyButton:pressed
 {
 background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0  rgba(0, 54, 4, 255), stop:1 rgba(0, 120, 0, 255));
 border-radius: 15;
 color: rgb(0, 0, 0);
 border: 1px solid rgb(255, 255, 255);
-min-width:  100px;
-max-width:  100px;
-min-height: 35px;
-max-height: 35px;
 }</string>
     </property>
     <property name="text">
