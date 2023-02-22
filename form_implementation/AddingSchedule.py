@@ -1,11 +1,12 @@
 import sys
-import MireaSchedule
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QPushButton
 from qtpy import uic
 
+from form_implementation import MireaSchedule
+
 app = QApplication(sys.argv)
-ui = uic.loadUi("Form1.ui")
+ui = uic.loadUi("forms\Form1.ui")
 closeButton = ui.findChild(QPushButton, "closeButton")
 mireaButton = ui.findChild(QPushButton, "addXMLButton")
 manuallyButton = ui.findChild(QPushButton, "addManuallyButton")

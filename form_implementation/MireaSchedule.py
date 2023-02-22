@@ -3,9 +3,10 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QPushButton
 from qtpy import uic
 
-import AddingSchedule
+from form_implementation import AddingSchedule
+
 app = QApplication(sys.argv)
-ui = uic.loadUi("Form2.ui")
+ui = uic.loadUi("forms\Form2.ui")
 closeButton = ui.findChild(QPushButton, "closeButton")
 
 

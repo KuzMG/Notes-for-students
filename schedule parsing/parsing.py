@@ -1,10 +1,9 @@
-import os
 import re
 import requests
 from bs4 import BeautifulSoup
 from openpyxl.reader.excel import load_workbook
 
-from DataClasses import ScheduleXls, Location, Institute, Schedule, DaysOfWeek, PairNumber, ParityOfWeek, Pair
+from dto.DataClasses import ScheduleXls, Location, Institute, Schedule, DaysOfWeek, PairNumber, ParityOfWeek, Pair
 
 
 def getSchelduleXml(qual, institute, location, course):
@@ -39,9 +38,9 @@ def getSchelduleXml(qual, institute, location, course):
 
 def scheduleOfGroups(scheduleXML):
     req = requests.get(scheduleXML)
-    file = open("schedule.xlsx", "wb")
+    file = open("../res/schedule.xlsx", "wb")
     file.write(req.content)
-    wb = load_workbook('schedule.xlsx')
+    wb = load_workbook('../res/schedule.xlsx')
     daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
     scheduleOfTheGroups = []
     for ws in wb:

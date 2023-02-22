@@ -1,7 +1,8 @@
 import sys
 
 from PyQt6.QtWidgets import QApplication
-import AddingSchedule
+
+from form_implementation import AddingSchedule
 
 
 def main():
