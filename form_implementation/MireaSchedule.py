@@ -1,28 +1,24 @@
-import sys
+
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QPushButton
+from PyQt6.QtWidgets import QWidget
 from qtpy import uic
 
 from form_implementation import AddingSchedule
 
-app = QApplication(sys.argv)
-ui = uic.loadUi("forms\Form2.ui")
-closeButton = ui.findChild(QPushButton, "closeButton")
 
+class Widget(QWidget):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("forms\Form2.ui", self)
+        self.closeButton.clicked.connect(self.the_closeButton_was_clicked)
+        self.backButton.clicked.connect(self.the_backButton_was_clicked)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.show()
 
-def the_button_was_clicked():
-    AddingSchedule.open_window()
-    ui.close()
+    def the_backButton_was_clicked(self):
+        self.w = AddingSchedule.Widget()
+        self.close()
 
-
-closeButton.clicked.connect(the_button_was_clicked)
-
-
-def open_window():
-    ui.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-    ui.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-    ui.show()
-
-
-def close_window():
-    ui.close()
+    def the_closeButton_was_clicked(self):
+        self.close()

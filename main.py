@@ -7,7 +7,7 @@ from form_implementation import AddingSchedule
 
 def main():
     app = QApplication(sys.argv)
-    AddingSchedule.open_window()
+    w = AddingSchedule.Widget()
     app.exec()
 
 
