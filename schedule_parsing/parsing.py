@@ -6,14 +6,14 @@ from openpyxl.reader.excel import load_workbook
 from dto.DataClasses import ScheduleXls, Location, Institute, Schedule, DaysOfWeek, PairNumber, ParityOfWeek, Pair
 
 
-def getSchelduleXml(qual, institute, location, course):
+def get_schedule_xls():
     URL = "https://www.mirea.ru/schedule/"
     r = requests.get(URL)
     soup = BeautifulSoup(r.text, "html.parser")
     scheduleMirea = soup.find('ul', id='tab-content').find_all('li', )
     schedule = []
 
-    qualification = ["бакалавриат/специалитет", "магистратура", "аспирантура", "", ""]
+    qualification = ["бакалавриат/специалитет", "магистратура", "аспирантура"]
     a = 0
     for qualif in scheduleMirea:
         if a == 3:
@@ -33,11 +33,11 @@ def getSchelduleXml(qual, institute, location, course):
                     continue
                 schedule[-1].institutes[-1].location[-1].courses.append(
                     course.find(class_='uk-link-toggle').get("href"))
-    return schedule[qual].institutes[institute].location[location].courses[course]
+    return schedule
 
 
-def scheduleOfGroups(scheduleXML):
-    req = requests.get(scheduleXML)
+def schedule_of_groups(schedule_xls):
+    req = requests.get(schedule_xls)
     file = open("../res/schedule.xlsx", "wb")
     file.write(req.content)
     wb = load_workbook('../res/schedule.xlsx')
