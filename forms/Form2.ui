@@ -35,9 +35,46 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 60, 0, 255), stop:1 rgba(0, 90, 0, 255));
+    <string notr="true">QWidget#widget {
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 60, 0, 255), stop:1 rgba(0, 90, 0, 255));
 border-radius: 15px;
-</string>
+}
+QComboBox {
+    border-radius: 6px;
+	font-size: 14px;
+	padding: 3px 0px3px 5px;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+     background-color: rgb(255, 255, 255);
+	padding-left: 2px;
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background-color:rgb(206, 206, 206);
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    	padding-left: 2px;
+		padding-top: 2px;
+}
+
+QComboBox::drop-down {
+	width: 25px;
+    border-left-style: None;
+}
+
+QComboBox::down-arrow {
+    image: url(res/image/comboBoxArrowDown.png);
+	padding-right: 5px;
+	padding-left: 5px;
+}
+QComboBox::down-arrow:on {
+ image: url(res/image/comboBoxArrowUp.png);
+}</string>
    </property>
    <widget class="QPushButton" name="closeButton">
     <property name="geometry">
@@ -74,7 +111,7 @@ border-top-right-radius: 15
      <string></string>
     </property>
    </widget>
-   <widget class="QPushButton" name="addXMLButton">
+   <widget class="QPushButton" name="okButton">
     <property name="geometry">
      <rect>
       <x>140</x>
@@ -108,7 +145,7 @@ border-top-right-radius: 15
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">#addXMLButton
+     <string notr="true">#okButton
 {
 background-color: rgb(0,100, 0);
 border-radius: 15;
@@ -116,7 +153,7 @@ color: rgb(217, 217, 217);
 border: 2px solid rgb(255, 255, 255);
 text-align: center;
 }
-#addXMLButton:hover{
+#okButton:hover{
 background-color: rgb(0, 85, 0);
 border-radius: 15;
 color: rgb(0, 0, 0);
@@ -126,7 +163,7 @@ max-width:  100px;
 min-height: 35px;
 max-height: 35px;
 }
-#addXMLButton:pressed{
+#okButton:pressed{
 background-color: rgb(0, 70, 0);
 border-radius: 15;
 color: rgb(0, 0, 0);
@@ -145,31 +182,31 @@ max-height: 35px;
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>40</y>
+      <y>50</y>
       <width>401</width>
       <height>191</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
      <property name="spacing">
-      <number>10</number>
+      <number>0</number>
      </property>
      <property name="sizeConstraint">
       <enum>QLayout::SetNoConstraint</enum>
      </property>
      <property name="leftMargin">
-      <number>100</number>
+      <number>50</number>
      </property>
      <property name="rightMargin">
-      <number>100</number>
+      <number>50</number>
      </property>
      <item>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="comboBoxQualif">
        <property name="autoFillBackground">
         <bool>false</bool>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);</string>
+        <string notr="true"/>
        </property>
        <property name="editable">
         <bool>false</bool>
@@ -195,28 +232,28 @@ max-height: 35px;
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="comboBoxInst">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_3">
+      <widget class="QComboBox" name="comboBoxLocation">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_4">
+      <widget class="QComboBox" name="comboBoxCourse">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_5">
+      <widget class="QComboBox" name="comboBoxGroup">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
@@ -261,6 +298,8 @@ border-bottom-right-radius: 15
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../res/image/comboBoxArrow.qrc"/>
+ </resources>
  <connections/>
 </ui>

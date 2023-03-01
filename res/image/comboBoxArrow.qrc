@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>comboBoxArrow.png</file>
+  </qresource>
+</RCC>
