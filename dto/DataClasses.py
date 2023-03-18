@@ -18,3 +18,5 @@ class Institute:
 class ScheduleXls:
     qualification: str
     institutes: List[Institute]
+
+

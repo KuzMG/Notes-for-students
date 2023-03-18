@@ -93,7 +93,7 @@ class WidgetMireaSchedule(QWidget):
 
     def combo_box_course_signal(self, index):
         self.okButton.setEnabled(False)
-        self.groups = parsing.schedule_of_groups(
+        self.groups = parsing.schedule_of_groups_xls(
             self.schedule[self.comboBoxQualif.currentIndex()].institutes[self.comboBoxInst.currentIndex()].location[
                 self.comboBoxLocation.currentIndex()].courses[index])
         self.comboBoxGroup.clear()

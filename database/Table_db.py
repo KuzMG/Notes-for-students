@@ -27,6 +27,7 @@ class PairNumber(Base):
     __tablename__ = "pair_number"
     id = Column(Integer, primary_key=True, index=True)
     pair_number = Column(Integer)
+    date = Column(String)
     day_of_week_id = Column(Integer, ForeignKey("days_of_week.id"))
     day_of_week = relationship("DaysOfWeek", back_populates="pair_number")
     parity = relationship("ParityOfWeek", back_populates="pair_number", cascade="all, delete-orphan")
@@ -51,7 +52,7 @@ class Pair(Base):
     parity_of_week_id = Column(Integer, ForeignKey("parity_of_week.id"))
     parity_of_week = relationship("ParityOfWeek", back_populates="pair")
 
-
+#
 # создаем таблицы
 Base.metadata.create_all(bind=engine)
 
