@@ -99,8 +99,8 @@ def get_schedule_bgu_pdf():
 date_bgu = ['09.00-10.35', '10.45-12.20', '13.00-14.35', '14.45-16.20']
 
 
-def schedule_of_groups_docx():
-    doc = docx.Document("res/schedule/3_kurs.docx")
+def schedule_of_groups_docx(path):
+    doc = docx.Document(path)
     all_tables = doc.tables
     schedule = []
     pattern = re.compile('w:fill=\"(\S*)\"')
@@ -112,7 +112,7 @@ def schedule_of_groups_docx():
                 continue
             if i == 1:
                 direct = row.cells[1].text.split("\n")[1]
-                schedule[-1].group = direct
+                schedule[-1].group = direct.strip()
                 continue
             if pattern.search(row.cells[-1]._tc.xml).group(1) != "FFFFFF":
                 day_of_week = row.cells[-1].text.strip()
@@ -169,15 +169,8 @@ def schedule_of_groups_docx():
                 pair = replace_string(first_cell)
                 schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair.append(
                     Pair(discipline=pair[0], occupation=pair[1], name_of_the_teacher=pair[2], number_of_cabinet=''))
-    with Session(bind=engine) as db:
-        if db.query(Schedule).filter(Schedule.group == schedule[1].group).first() is None:
-            db.add(schedule[1])
-            print(F"group {schedule[1].group} add")
-        else:
-            group = db.query(Schedule).filter(Schedule.group == schedule.group).first()
-            group.days_of_week = schedule.days_of_week
-            print(F"group {group.group} update")
-        db.commit()
+    return schedule
+
 
 def replace_string(text):
     # text = text.replace("\n", " ")
@@ -206,4 +199,4 @@ def replace_string(text):
             discipline = text[:text.rindex('(')]
         except:
             discipline = text
-    return (discipline, occupation, name_of_the_teacher)
+    return discipline, occupation, name_of_the_teacher
