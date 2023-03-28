@@ -1,11 +1,9 @@
-import os
+
 import re
-from _ast import pattern
 
 import requests
 from bs4 import BeautifulSoup
 from openpyxl.reader.excel import load_workbook
-from sqlalchemy.orm import Session
 
 from database.Table_db import Schedule, DaysOfWeek, PairNumber, ParityOfWeek, Pair, engine
 from dto.DataClasses import ScheduleXls, Location, Institute
@@ -69,18 +67,21 @@ def schedule_of_groups_xls(schedule_xls):
                     pairNumber = 1
                     scheduleOfTheGroups[-1].days_of_week.append(DaysOfWeek(day_of_week=daysOfWeek[day], pair_number=[]))
                     day += 1
+                discipline = row[0]
+                if discipline is not None and discipline.find("н.") != -1:
+                    discipline = discipline[discipline.find("н.") + 3:]
                 if (a - 3) % 2 == 0:
                     scheduleOfTheGroups[-1].days_of_week[-1].pair_number.append(
                         PairNumber(pair_number=pairNumber, parity=[]))
                     scheduleOfTheGroups[-1].days_of_week[-1].pair_number[-1].parity.append(
                         ParityOfWeek(parity=True,
-                                     pair=[Pair(discipline=row[0], occupation=row[1], name_of_the_teacher=row[2],
+                                     pair=[Pair(discipline=discipline, occupation=row[1], name_of_the_teacher=row[2],
                                                 number_of_cabinet=row[3])]))
                     pairNumber += 1
                 else:
                     scheduleOfTheGroups[-1].days_of_week[-1].pair_number[-1].parity.append(
                         ParityOfWeek(parity=False,
-                                     pair=[Pair(discipline=row[0], occupation=row[1], name_of_the_teacher=row[2],
+                                     pair=[Pair(discipline=discipline, occupation=row[1], name_of_the_teacher=row[2],
                                                 number_of_cabinet=row[3])]))
                 a += 1
     return scheduleOfTheGroups

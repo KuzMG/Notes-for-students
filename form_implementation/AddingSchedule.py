@@ -1,5 +1,4 @@
-from PyQt6.QtCore import Qt, QEvent
-from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QFileDialog
 from qtpy import uic
 from sqlalchemy.orm import Session
