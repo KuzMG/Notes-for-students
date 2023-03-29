@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>166</width>
-    <height>143</height>
+    <width>101</width>
+    <height>89</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,10 +35,10 @@
       <string notr="true">background-color: rgb(222, 222, 222);</string>
      </property>
      <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Plain</enum>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item alignment="Qt::AlignTop">
@@ -67,6 +67,9 @@
         </property>
         <property name="focusPolicy">
          <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::DefaultContextMenu</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QListWidget {
@@ -146,6 +149,8 @@ QListWidget::item:selected {
        </widget>
       </item>
      </layout>
+     <zorder>listWidget</zorder>
+     <zorder>label</zorder>
     </widget>
    </item>
   </layout>

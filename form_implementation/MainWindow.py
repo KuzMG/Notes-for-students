@@ -14,9 +14,15 @@ from calendar import monthrange
 class HomeScreen(QMainWindow):
     Month = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь",
              "Декабрь"]
+    Week = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС']
 
     def __init__(self):
         super().__init__()
+        self.lastDateCell = None
+        self.nowCol = None
+        self.nowRow = None
+        self.lastCol = None
+        self.lastRow = None
         self.lastCalendarDate = None
         uic.loadUi("forms\Form5.ui", self)
         self.parity = 0
@@ -35,7 +41,10 @@ class HomeScreen(QMainWindow):
         self.changeParityButton.setToolTip("изменить четность")
         for row in range(6):
             for column in range(7):
-                self.newItem(row, column)
+                self.newCellCalendar(row, column)
+
+        self.pairVisualization(self.nowRow,
+                               self.nowCol)
         self.showMaximized()
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
@@ -56,21 +65,40 @@ class HomeScreen(QMainWindow):
         self.lastCalendarDate.clear()
         for row in range(6):
             for column in range(7):
-                self.setItem(row, column)
+                self.setCellCalendar(row, column)
+        for i in range(self.pairLayout.count()):
+            self.pairLayout.removeWidget(self.pairLayout.itemAt(0).widget())
+        self.weekDay.setText(F"{self.Week[self.lastCol]} {self.calendarDays[self.lastRow*7+self.lastCol]}")
+        with Session(bind=engine) as db:
+            schedule = db.query(Schedule).filter(Schedule.group == "БСБО-05-21").first()
+            if self.lastCol < len(schedule.days_of_week):
+                for pair in schedule.days_of_week[self.lastCol].pair_number:
+                    cell = uic.loadUi("forms\Form6.ui")
+                    cell.pairTime.setText(pair.date)
+                    if pair.parity[self.parityOfWeek(self.lastRow * 7)].pair[0].discipline != '':
+                        cell.discipline.setText(pair.parity[self.parityOfWeek(self.lastRow * 7)].pair[0].discipline)
+                        cell.teacher.setText(pair.parity[self.parityOfWeek(self.lastRow * 7)].pair[0].name_of_the_teacher)
+                        cell.occupation.setText(pair.parity[self.parityOfWeek(self.lastRow * 7)].pair[0].occupation)
+                    else:
+                        cell.discipline.setText("------------------")
+                        cell.teacher.setText("----")
+                        cell.widget_3.setStyleSheet("background-color: rgba(255, 255, 255,0);")
+                        cell.occupation.setText("")
+                    self.pairLayout.addWidget(cell)
 
     def nextMonth(self):
         self.moveMonth = 1
         self.date()
         for row in range(6):
             for column in range(7):
-                self.setItem(row, column)
+                self.setCellCalendar(row, column)
 
     def lastMonth(self):
         self.moveMonth = -1
         self.date()
         for row in range(6):
             for column in range(7):
-                self.setItem(row, column)
+                self.setCellCalendar(row, column)
 
     def date(self):
         if self.moveMonth == 0:
@@ -95,14 +123,44 @@ class HomeScreen(QMainWindow):
                 continue
             if numDay != days:
                 numDay += 1
+                if numDay == date.today().day and self.calendarDate == date.today():
+                    self.nowRow = i//7
+                    self.nowCol = i%7
                 self.calendarDays.append(numDay)
                 continue
             else:
                 numDay = 1
                 self.calendarDays.append(numDay)
 
-    def setItem(self, row, col):
+    def setCellCalendar(self, row, col):
         cell = self.gridLayout.itemAt(row * 7 + col).widget()
+        cell.frame.setStyleSheet("""QFrame#frame{
+                background-color: rgb(222, 222, 222);
+                border: 0px solid rgb(255, 0, 0);
+            }
+            QListWidget#listWidget{
+                background-color: rgb(222, 222, 222);
+            }
+            """)
+        if self.calendarDate.year == date.today().year and self.calendarDate.month == date.today().month and self.nowCol ==col and self.nowRow == row:
+            cell.frame.setStyleSheet("""QFrame#frame{
+                                background-color: rgb(222, 222, 222);
+                                border: 1px solid rgb(255, 0, 0);
+                                }
+                                QListWidget#listWidget{
+                                        background-color: rgb(222, 222, 222);
+                                    }
+                                """)
+
+        if self.lastDateCell.year == self.calendarDate.year and self.lastDateCell.month == self.calendarDate.month and self.lastDateCell.day == self.calendarDays[row*7+col] and self.lastRow == row and self.lastCol ==col:
+            cell.frame.setStyleSheet("""QFrame#frame{
+                                            background-color: rgb(222, 222, 222);
+                                            border: 1px solid rgb(255, 0, 0);
+                                            }
+                                            QListWidget#listWidget{
+                                                    background-color: rgb(222, 222, 222);
+                                                }
+                                            """)
         cell.label.setText(str(self.calendarDays[row * 7 + col]))
         cell.listWidget.clear()
         with Session(bind=engine) as db:
@@ -112,8 +170,9 @@ class HomeScreen(QMainWindow):
                     if not pair.parity[self.parityOfWeek(row * 7)].pair[0].discipline == "":
                         cell.listWidget.addItem(pair.parity[self.parityOfWeek(row * 7)].pair[0].discipline)
 
-    def newItem(self, row, col):
-        cell = uic.loadUi("forms\Form7.ui")
+    def newCellCalendar(self, row, col):
+        cell = Cell(row,col,self.pairVisualization)
+
         cell.label.setText(str(self.calendarDays[row * 7 + col]))
         with Session(bind=engine) as db:
             schedule = db.query(Schedule).filter(Schedule.group == "БСБО-05-21").first()
@@ -122,6 +181,62 @@ class HomeScreen(QMainWindow):
                     if not pair.parity[self.parityOfWeek(row * 7)].pair[0].discipline == "":
                         cell.listWidget.addItem(pair.parity[self.parityOfWeek(row * 7)].pair[0].discipline)
         self.gridLayout.addWidget(cell, row, col)
+
+    def pairVisualization(self,row,col):
+        print(self.lastDateCell,date(self.calendarDate.year,self.calendarDate.month, self.calendarDays[row*7+col]))
+        if self.lastDateCell is not None and (self.lastDateCell!= date(self.calendarDate.year,self.calendarDate.month, self.calendarDays[row*7+col]) and (row != self.lastRow or col != self.lastCol)):
+            SelectCell = self.gridLayout.itemAtPosition(self.lastRow,self.lastCol).widget()
+            SelectCell.frame.setStyleSheet("""QFrame#frame{
+                background-color: rgb(222, 222, 222);
+                border: 0px solid rgb(255, 0, 0);
+            }
+            QListWidget#listWidget{
+                background-color: rgb(222, 222, 222);
+            }
+            """)
+        else:
+            SelectCell = self.gridLayout.itemAtPosition(row, col).widget()
+            SelectCell.frame.setStyleSheet("""QFrame#frame{
+                    background-color: rgb(222, 222, 222);
+                    border: 1px solid rgb(255, 0, 0);
+                    }
+                    QListWidget#listWidget{
+                            background-color: rgb(222, 222, 222);
+                        }
+                    """)
+        if self.calendarDate.year == date.today().year and self.calendarDate.month == date.today().month:
+            SelectCell = self.gridLayout.itemAtPosition(self.nowRow, self.nowCol).widget()
+            SelectCell.frame.setStyleSheet("""QFrame#frame{
+                                background-color: rgb(222, 222, 222);
+                                border: 1px solid rgb(255, 0, 0);
+                                }
+                                QListWidget#listWidget{
+                                        background-color: rgb(222, 222, 222);
+                                    }
+                                """)
+
+        for i in range(self.pairLayout.count()):
+            self.pairLayout.removeWidget(self.pairLayout.itemAt(0).widget())
+        self.weekDay.setText(F"{self.Week[col]} {self.calendarDays[row*7+col]}")
+        with Session(bind=engine) as db:
+            schedule = db.query(Schedule).filter(Schedule.group == "БСБО-05-21").first()
+            if col < len(schedule.days_of_week):
+                for pair in schedule.days_of_week[col].pair_number:
+                    cell = uic.loadUi("forms\Form6.ui")
+                    cell.pairTime.setText(pair.date)
+                    if pair.parity[self.parityOfWeek(row * 7)].pair[0].discipline != '':
+                        cell.discipline.setText(pair.parity[self.parityOfWeek(row * 7)].pair[0].discipline)
+                        cell.teacher.setText(pair.parity[self.parityOfWeek(row * 7)].pair[0].name_of_the_teacher)
+                        cell.occupation.setText(pair.parity[self.parityOfWeek(row * 7)].pair[0].occupation)
+                    else:
+                        cell.discipline.setText("------------------")
+                        cell.teacher.setText("----")
+                        cell.widget_3.setStyleSheet("background-color: rgba(255, 255, 255,0);")
+                        cell.occupation.setText("")
+                    self.pairLayout.addWidget(cell)
+        self.lastDateCell = date(self.calendarDate.year,self.calendarDate.month, self.calendarDays[row*7+col])
+        self.lastRow = row
+        self.lastCol = col
 
     def parityOfWeek(self, row):
         if row < 7 and self.calendarDays[row] > 20:
@@ -136,7 +251,6 @@ class HomeScreen(QMainWindow):
                 dictDate = date(self.calendarDate.year + 1, 1, self.calendarDays[row])
         else:
             dictDate = date(self.calendarDate.year, self.calendarDate.month, self.calendarDays[row])
-        print(dictDate)
         if self.lastCalendarDate is None or len(self.lastCalendarDate)==0:
             self.lastCalendarDate = {dictDate: self.parity}
             return self.parity
@@ -200,3 +314,23 @@ class HomeScreen(QMainWindow):
         else:
             self.collapseExpandButton.setText("")
             self.showMaximized()
+
+class Cell(QWidget):
+    def __init__(self,row,col,select):
+        super().__init__()
+        self.select = select
+        self.row = row
+        self.col = col
+        uic.loadUi("forms\Form7.ui", self)
+        self.listWidget.mousePressEvent = self.mousePressEvent
+
+    def mousePressEvent(self, event):
+        self.frame.setStyleSheet("""QFrame#frame{
+        background-color: rgb(222, 222, 222);
+        border: 1px solid rgb(255, 0, 0);
+        }
+        QListWidget#listWidget{
+                background-color: rgb(222, 222, 222);
+            }
+        """)
+        self.select(self.row,self.col)
