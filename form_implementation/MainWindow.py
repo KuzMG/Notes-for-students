@@ -221,15 +221,17 @@ class HomeScreen(QMainWindow):
         lastDays = monthrange(lastDate.year, lastDate.month)[1]
         firstDay = datetime(year, month, 1).weekday()
         numDay = 0
+        flag = True
         for i in range(42):
             if i < firstDay:
                 self.calendarDays.append(lastDays - firstDay + 1 + i)
                 continue
             if numDay != days:
                 numDay += 1
-                if numDay == date.today().day and self.calendarDate == date.today():
+                if numDay == date.today().day and flag and self.calendarDate == date.today():
                     self.nowRow = i // 7
                     self.nowCol = i % 7
+                    flag = False
                 self.calendarDays.append(numDay)
                 continue
             else:
