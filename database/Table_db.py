@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import DeclarativeBase, relationship
 
-engine = create_engine("postgresql://postgres:qwe321loi@127.0.0.1/scheduleBD")
+engine = create_engine("sqlite:///res/db/schedule.db")
 
 
 
@@ -11,6 +11,7 @@ class Schedule(Base):
     __tablename__ = "schedule"
     id = Column(Integer, primary_key=True, index=True)
     group = Column(String)
+    num_parity = Column(Integer)
     days_of_week = relationship("DaysOfWeek", back_populates="schedule", cascade="all, delete-orphan")
 
 
@@ -46,14 +47,16 @@ class Pair(Base):
     __tablename__ = "pair"
     id = Column(Integer, primary_key=True, index=True)
     discipline = Column(String)
+    discipline_notes = Column(String)
     occupation = Column(String)
     name_of_the_teacher = Column(String)
+    name_of_the_teacher_notes = Column(String)
     number_of_cabinet = Column(String)
     parity_of_week_id = Column(Integer, ForeignKey("parity_of_week.id"))
     parity_of_week = relationship("ParityOfWeek", back_populates="pair")
+    visibility = Column(Boolean)
 
 #
 # создаем таблицы
 Base.metadata.create_all(bind=engine)
 
-print("База данных и таблица созданы")

@@ -60,8 +60,8 @@
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget#widget {
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 60, 0, 255), stop:1 rgba(0, 90, 0, 255));
-border-radius: 15px;
+background-color: rgb(255, 212, 125);
+border-radius: 20px;
 }</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
@@ -126,15 +126,19 @@ border-radius: 15px;
            </property>
            <property name="styleSheet">
             <string notr="true">#closeButton{
-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);
 background-color:rgba(255, 255, 255, 0);
 }
 #closeButton:hover{
 color: rgb(0, 0, 0);
-background-color: rgba(218, 218, 218, 50);
+background-color: rgb(255, 170, 0);
 border-radius: 0;
-border-bottom-left-radius: 15;
-border-top-right-radius: 15
+border-bottom-left-radius: 20;
+border-top-right-radius: 20;
+}
+#closeButton:pressed{
+background-color: rgb(255, 212, 125,0);
+color: rgb(0, 0, 0);
 }</string>
            </property>
            <property name="text">
@@ -174,7 +178,7 @@ border-top-right-radius: 15
            <property name="font">
             <font>
              <family>Myanmar Text</family>
-             <pointsize>17</pointsize>
+             <pointsize>15</pointsize>
              <weight>75</weight>
              <italic>false</italic>
              <bold>true</bold>
@@ -186,7 +190,7 @@ border-top-right-radius: 15
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(255, 255, 255, 0);
-color: rgb(217, 217, 217)</string>
+color: rgb(0, 0, 0)</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::WinPanel</enum>
@@ -198,7 +202,7 @@ color: rgb(217, 217, 217)</string>
             <number>11</number>
            </property>
            <property name="text">
-            <string>WELCOME</string>
+            <string>ДОБРО ПОЖАЛОВАТЬ</string>
            </property>
            <property name="textFormat">
             <enum>Qt::RichText</enum>
@@ -273,31 +277,23 @@ color: rgb(217, 217, 217)</string>
            <property name="styleSheet">
             <string notr="true">#addXlsButton
 {
-background-color: rgb(0, 100, 0);
-border-radius: 15;
-color: rgb(217, 217, 217);
-border: 2px solid rgb(255, 255, 255);
+background-color: rgb(255, 212, 125);
+border-radius: 20px;
+color: rgb(0, 0, 0);
+border: 1px solid rgb(0, 0, 0);
 text-align: center;
 }
 #addXlsButton:hover{
-background-color: rgb(0, 85, 0);
+background-color: rgb(255, 170, 0);
 border-radius: 15;
 color: rgb(0, 0, 0);
-border: 1px solid rgb(255, 255, 255);
-min-width:  100px;
-max-width:  100px;
-min-height: 35px;
-max-height: 35px;
+border: 1px solid rgb(0, 0, 0);
 }
 #addXlsButton:pressed{
-background-color: rgb(0,70, 0);
-border-radius: 15;
+background-color: rgb(255, 212, 125);
+border-radius: 20;
 color: rgb(0, 0, 0);
-border: 1px solid rgb(255, 255, 255);
-min-width:  100px;
-max-width:  100px;
-min-height: 35px;
-max-height: 35px;
+border: 1px solid rgb(0, 0, 0);
 }</string>
            </property>
            <property name="text">
@@ -326,26 +322,25 @@ max-height: 35px;
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">#addDocxButton{
-background-color: rgb(0, 100, 0);
-border-radius: 15;
-color: rgb(217, 217, 217);
-border: 2px solid rgb(255, 255, 255);
-}
-#addDocxButton:hover
+            <string notr="true">#addDocxButton
 {
-background-color: rgb(0, 85, 0);
-border-radius: 15;
-height: 20px;
+background-color: rgb(255, 212, 125);
+border-radius: 20px;
 color: rgb(0, 0, 0);
-border: 1px solid rgb(255, 255, 255);
+border: 1px solid rgb(0, 0, 0);
+text-align: center;
 }
-#addDocxButton:pressed
-{
-background-color: rgb(0, 70, 0);
+#addDocxButton:hover{
+background-color: rgb(255, 170, 0);
 border-radius: 15;
 color: rgb(0, 0, 0);
-border: 1px solid rgb(255, 255, 255);
+border: 1px solid rgb(0, 0, 0);
+}
+#addDocxButton:pressed{
+background-color: rgb(255, 212, 125);
+border-radius: 20;
+color: rgb(0, 0, 0);
+border: 1px solid rgb(0, 0, 0);
 }</string>
            </property>
            <property name="text">

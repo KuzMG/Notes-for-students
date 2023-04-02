@@ -1,4 +1,3 @@
-
 import re
 
 import requests
@@ -51,7 +50,7 @@ def schedule_of_groups_xls(schedule_xls):
         for i in range(0, ws.max_column // 5):
             if (i + 1) % 3 == 0:
                 continue
-            scheduleOfTheGroups.append(Schedule(group='', days_of_week=[]))
+            scheduleOfTheGroups.append(Schedule(group='', days_of_week=[],num_parity = 0))
             a = 1
             day = 0
             pairNumber = 1
@@ -65,6 +64,7 @@ def schedule_of_groups_xls(schedule_xls):
                     continue
                 if (a - 3) % 14 == 0:
                     pairNumber = 1
+
                     scheduleOfTheGroups[-1].days_of_week.append(DaysOfWeek(day_of_week=daysOfWeek[day], pair_number=[]))
                     day += 1
                 discipline = row[0]
@@ -72,17 +72,17 @@ def schedule_of_groups_xls(schedule_xls):
                     discipline = discipline[discipline.find("н.") + 3:]
                 if (a - 3) % 2 == 0:
                     scheduleOfTheGroups[-1].days_of_week[-1].pair_number.append(
-                        PairNumber(pair_number=pairNumber, parity=[]))
+                        PairNumber(pair_number=pairNumber, parity=[], date=data_mirea[pairNumber - 1]))
                     scheduleOfTheGroups[-1].days_of_week[-1].pair_number[-1].parity.append(
                         ParityOfWeek(parity=True,
                                      pair=[Pair(discipline=discipline, occupation=row[1], name_of_the_teacher=row[2],
-                                                number_of_cabinet=row[3])]))
+                                                number_of_cabinet=row[3],visibility = True)]))
                     pairNumber += 1
                 else:
                     scheduleOfTheGroups[-1].days_of_week[-1].pair_number[-1].parity.append(
                         ParityOfWeek(parity=False,
                                      pair=[Pair(discipline=discipline, occupation=row[1], name_of_the_teacher=row[2],
-                                                number_of_cabinet=row[3])]))
+                                                number_of_cabinet=row[3],visibility = True)]))
                 a += 1
     return scheduleOfTheGroups
 
@@ -97,6 +97,7 @@ def get_schedule_bgu_pdf():
     return schedule
 
 
+data_mirea = ['09.00-10.30', '10.40-12.10', '12.40-14.10', '14.20-15.50', '16.20-17:50', '18:00-19:30', '19:40-21:00']
 date_bgu = ['09.00-10.35', '10.45-12.20', '13.00-14.35', '14.45-16.20']
 
 
@@ -106,7 +107,7 @@ def schedule_of_groups_docx(path):
     schedule = []
     pattern = re.compile('w:fill=\"(\S*)\"')
     for table in all_tables:
-        schedule.append(Schedule(group=None, days_of_week=[]))
+        schedule.append(Schedule(group=None, days_of_week=[],num_parity = 0))
         day = 0
         for i, row in enumerate(table.rows):
             if i == 0:
@@ -118,6 +119,24 @@ def schedule_of_groups_docx(path):
             if pattern.search(row.cells[-1]._tc.xml).group(1) != "FFFFFF":
                 day_of_week = row.cells[-1].text.strip()
                 if day < 5:
+                    if len(schedule[-1].days_of_week) > 0:
+                        if len(schedule[-1].days_of_week[-1].pair_number) > 0 and len(
+                                schedule[-1].days_of_week[-1].pair_number[-1].parity) > 0 and len(
+                                schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair) == 0:
+                            d = schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair[0].discipline
+                            o = schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair[0].occupation
+                            n = schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair[0].name_of_the_teacher
+                            schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair.append(
+                                Pair(discipline=d, occupation=o, name_of_the_teacher=n,
+                                     number_of_cabinet='', visibility = True))
+                        for p in range(4 - len(schedule[-1].days_of_week[-1].pair_number)):
+                            schedule[-1].days_of_week[-1].pair_number.append(
+                                PairNumber(date=date_bgu[len(schedule[-1].days_of_week[-1].pair_number)], parity=[
+                                    ParityOfWeek(parity=True, pair=[
+                                        Pair(discipline='', occupation='', name_of_the_teacher='',
+                                             number_of_cabinet='',visibility = True)]), ParityOfWeek(parity=False, pair=[
+                                        Pair(discipline='', occupation='', name_of_the_teacher='',
+                                             number_of_cabinet='',visibility = True)])]))
                     schedule[-1].days_of_week.append(DaysOfWeek(day_of_week=day_of_week, pair_number=[]))
                     last_date = '-'
                 day += 1
@@ -134,12 +153,19 @@ def schedule_of_groups_docx(path):
                         pair_number = index + 2
                         date = date_bgu[index + 1]
                     if last_date != date:
+                        if len(schedule[-1].days_of_week[-1].pair_number) > 0 and len(
+                                schedule[-1].days_of_week[-1].pair_number[-1].parity) > 0 and len(
+                                schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair) == 0:
+                            d = schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair[0].discipline
+                            o = schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair[0].occupation
+                            n = schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair[0].name_of_the_teacher
+                            schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair.append(
+                                Pair(discipline=d, occupation=o, name_of_the_teacher=n,
+                                     number_of_cabinet='',visibility = True))
                         schedule[-1].days_of_week[-1].pair_number.append(
-                            PairNumber(pair_number=pair_number, date=date, parity=[ParityOfWeek(parity=True, pair=[])]))
-                    else:
-                        schedule[-1].days_of_week[-1].pair_number.append(
-                            PairNumber(pair_number=pair_number, date=date,
-                                       parity=[ParityOfWeek(parity=False, pair=[])]))
+                            PairNumber(pair_number=pair_number, date=date, parity=[ParityOfWeek(parity=True, pair=[]),
+                                                                                   ParityOfWeek(parity=False,
+                                                                                                pair=[])]))
                     last_date = date
                     continue
                 text = cell.text.strip().replace('\n', '')
@@ -151,49 +177,60 @@ def schedule_of_groups_docx(path):
                     last_cell = text
                 len_cell = j
             if len_cell == 3:
-                if first_cell != '' and medium_cell != '' and last_cell != '':
+                if (first_cell != '' and medium_cell != '' and last_cell != '') or first_cell != '':
                     pair = replace_string(first_cell)
-                    schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair.append(
-                        Pair(discipline=pair[0], occupation=pair[1], name_of_the_teacher=pair[2], number_of_cabinet=''))
-                elif first_cell != '':
-                    pair = replace_string(first_cell)
-                    schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair.append(
-                        Pair(discipline=pair[0], occupation=pair[1], name_of_the_teacher=pair[2], number_of_cabinet=''))
                 elif last_cell != '':
                     pair = replace_string(last_cell)
-                    schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair.append(
-                        Pair(discipline=pair[0], occupation=pair[1], name_of_the_teacher=pair[2], number_of_cabinet=''))
                 elif first_cell == '' and medium_cell == '' and last_cell == '':
-                    schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair.append(
-                        Pair(discipline='', occupation='', name_of_the_teacher='', number_of_cabinet=''))
+                    pair = ['', '', '']
             if len_cell == 1:
                 pair = replace_string(first_cell)
+            if len(schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair) == 0:
+                schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair.append(
+                    Pair(discipline=pair[0], occupation=pair[1], name_of_the_teacher=pair[2],
+                         number_of_cabinet='',visibility = True))
+            else:
                 schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair.append(
-                    Pair(discipline=pair[0], occupation=pair[1], name_of_the_teacher=pair[2], number_of_cabinet=''))
+                    Pair(discipline=pair[0], occupation=pair[1], name_of_the_teacher=pair[2],
+                         number_of_cabinet='',visibility = True))
+        if len(schedule[-1].days_of_week) > 0:
+            if len(schedule[-1].days_of_week[-1].pair_number) > 0 and len(
+                    schedule[-1].days_of_week[-1].pair_number[-1].parity) > 0 and len(
+                schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair) == 0:
+                d = schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair[0].discipline
+                o = schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair[0].occupation
+                n = schedule[-1].days_of_week[-1].pair_number[-1].parity[0].pair[0].name_of_the_teacher
+                schedule[-1].days_of_week[-1].pair_number[-1].parity[-1].pair.append(
+                    Pair(discipline=d, occupation=o, name_of_the_teacher=n,
+                         number_of_cabinet='',visibility = True))
     return schedule
 
 
 def replace_string(text):
     # text = text.replace("\n", " ")
     # text = text.strip()
+    discipline = ''
     occupation = ''
     name_of_the_teacher = ''
     if text.find('лекция') != -1:
-        occupation = text[text.find('лекция'):text.find('лекция') + 6]
+        occupation = 'ЛК'
         text = text[:text.find('лекция')]
     elif text.find('семинар') != -1:
-        occupation = text[text.find('семинар'):text.find('семинар') + 7]
+        occupation = 'ПР'
         text = text[:text.find('семинар')]
     elif text.find('П/р') != -1:
-        occupation = text[text.find('П/р'):text.find('П/р') + 3]
+        occupation = 'П/Р'
         text = text[:text.find('П/р')]
     elif text.find('л/р') != -1:
-        occupation = text[text.find('л/р'):text.find('л/р') + 3]
+        occupation = 'Л/Р'
         text = text[:text.find('л/р')]
     if text.find('Учебная практика') != -1:
         discipline = text
         occupation = ''
         name_of_the_teacher = ''
+    if text.find('Общая физическая подготовка') != -1:
+            discipline = 'Общая физическая подготовка'
+            occupation = 'ПР'
     else:
         try:
             name_of_the_teacher = text[text.rindex('(') + 1:text.rindex(')')]

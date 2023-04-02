@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>355</width>
-    <height>50</height>
+    <height>48</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
    <item>
     <widget class="QFrame" name="frame">
      <property name="styleSheet">
-      <string notr="true">QFrame{
+      <string notr="true">QFrame#frame{
 background-color: rgb(255, 170, 0);
 border-radius: 20px;
 }</string>
@@ -83,15 +83,38 @@ border-radius: 20px;
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <widget class="QLabel" name="discipline">
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
            <property name="text">
             <string>TextLabel</string>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QLabel" name="teacher">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: rgb(58, 58, 58);</string>
+           </property>
            <property name="text">
             <string>TextLabel</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -102,8 +125,7 @@ border-radius: 20px;
        <widget class="QWidget" name="widget_3" native="true">
         <property name="styleSheet">
          <string notr="true">border-bottom-left-radius: 15px;
-border-top-right-radius: 15px;
-background-color: rgb(170, 85, 127);</string>
+border-top-right-radius: 15px;</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>

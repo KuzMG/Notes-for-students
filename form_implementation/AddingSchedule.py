@@ -8,8 +8,9 @@ from database.Table_db import engine, Schedule
 
 
 class Widget(QWidget):
-    def __init__(self):
+    def __init__(self,openHomeScreen):
         super().__init__()
+        self.openHomeScreen = openHomeScreen
         self.setLayout(QVBoxLayout())
         self.add_w1()
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -24,7 +25,7 @@ class Widget(QWidget):
         self.layout().addWidget(main_widget)
 
     def add_w2(self):
-        mirea_schedule = WidgetMireaSchedule()
+        mirea_schedule = WidgetMireaSchedule(self.openHomeScreen)
         mirea_schedule.backButton.clicked.connect(self.the_back_button_was_clicked)
         mirea_schedule.closeButton.clicked.connect(self.close)
         self.layout().replaceWidget(self.layout().itemAt(0).widget(), mirea_schedule)
@@ -43,7 +44,7 @@ class Widget(QWidget):
         self.layout().replaceWidget(self.layout().itemAt(0).widget(), bgu_schedules)
 
     def add_w4(self, schedule):
-        bgu_schedule = WidgetBguSchedule(schedule)
+        bgu_schedule = WidgetBguSchedule(schedule,self.openHomeScreen)
         bgu_schedule.backButton.clicked.connect(self.the_add_docx_button_was_clicked)
         bgu_schedule.closeButton.clicked.connect(self.close)
         self.layout().replaceWidget(self.layout().itemAt(0).widget(), bgu_schedule)
@@ -70,15 +71,15 @@ class Widget(QWidget):
     def open_file(self):
         path = QFileDialog.getOpenFileName(self, 'Open file', '/home', "Text files (*.docx)")[0]
         if path != '':
-            print(path)
             schedule = parsing.schedule_of_groups_docx(path)
             if len(schedule) > 0:
                 self.the_add_bgu_group_was_clicked(schedule)
 
 
 class WidgetMireaSchedule(QWidget):
-    def __init__(self):
+    def __init__(self,openHomeScreen):
         super().__init__()
+        self.openHomeScreen = openHomeScreen
         self.groups = None
         self.group = None
         uic.loadUi("forms\Form2.ui", self)
@@ -146,18 +147,14 @@ class WidgetMireaSchedule(QWidget):
 
     def push_button_ok_signal(self):
         with Session(bind=engine) as db:
-            # if db.query(Schedule).filter(Schedule.group == self.group.group).first() is not None:
-            #     group = db.query(Schedule).filter(Schedule.group == self.group.group).first()
-            #     db.delete(group)
             if db.query(Schedule).filter(Schedule.group == self.group.group).first() is None:
                 db.add(self.group)
-                print(F"group {self.group.group} add")
             else:
                 group = db.query(Schedule).filter(Schedule.group == self.group.group).first()
                 db.delete(group)
                 db.add(self.group)
-                print(F"group {self.group.group} update")
             db.commit()
+        self.openHomeScreen()
 
 
 class WidgetScheduleSelect(QWidget):
@@ -178,20 +175,11 @@ class WidgetAddBguScheduleDocx(QWidget):
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.show()
 
-        # with Session(bind=engine) as db:
-        #     if db.query(Schedule).filter(Schedule.group == schedule[1].group).first() is None:
-        #         db.add(schedule[1])
-        #         print(F"group {schedule[1].group} add")
-        #     else:
-        #         group = db.query(Schedule).filter(Schedule.group == schedule.group).first()
-        #         group.days_of_week = schedule.days_of_week
-        #         print(F"group {group.group} update")
-        #     db.commit()
-
 
 class WidgetBguSchedule(QWidget):
-    def __init__(self, schedule):
+    def __init__(self, schedule,openHomeScreen):
         super().__init__()
+        self.openHomeScreen =openHomeScreen
         self.group = None
         uic.loadUi("forms\Form4.ui", self)
         self.schedule = schedule
@@ -211,15 +199,11 @@ class WidgetBguSchedule(QWidget):
 
     def push_button_ok_signal(self):
         with Session(bind=engine) as db:
-            # if db.query(Schedule).filter(Schedule.group == self.group.group).first() is not None:
-            #     group = db.query(Schedule).filter(Schedule.group == self.group.group).first()
-            #     db.delete(group)
             if db.query(Schedule).filter(Schedule.group == self.group.group).first() is None:
                 db.add(self.group)
-                print(F"group {self.group.group} add")
             else:
                 group = db.query(Schedule).filter(Schedule.group == self.group.group).first()
                 db.delete(group)
                 db.add(self.group)
-                print(F"group {self.group.group} update")
             db.commit()
+        self.openHomeScreen()

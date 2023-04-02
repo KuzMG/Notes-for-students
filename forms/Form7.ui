@@ -32,15 +32,30 @@
    <item>
     <widget class="QFrame" name="frame">
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(222, 222, 222);</string>
+      <string notr="true">background-color: rgb(234, 234, 234);</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
+      <enum>QFrame::Sunken</enum>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>2</number>
+      </property>
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>9</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
       <item alignment="Qt::AlignTop">
        <widget class="QLabel" name="label">
         <property name="text">
@@ -76,12 +91,12 @@
     show-decoration-selected: 0; /* make the selection span the entire width of the view */
 }
 
-QListWidget::item:selected {
-    border: 2px solid rgb(85, 255, 0);
+QListWidget::item:alternate {
+    background: #EEEEEE;
 }</string>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Box</enum>
         </property>
         <property name="frameShadow">
          <enum>QFrame::Sunken</enum>
@@ -138,7 +153,7 @@ QListWidget::item:selected {
          <enum>QListView::SinglePass</enum>
         </property>
         <property name="wordWrap">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="selectionRectVisible">
          <bool>true</bool>
