@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
     <string notr="true">QWidget#centralwidget{
-background-color: rgb(234, 234, 234);
+	background-color: rgb(255, 212, 125);
 }</string>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
@@ -190,7 +190,7 @@ background-color: rgb(234, 234, 234);
      <widget class="QFrame" name="frame_2">
       <property name="styleSheet">
        <string notr="true">#frame_2{
-background-color: rgb(234, 234, 234);
+	background-color: rgb(255, 212, 125);
 }</string>
       </property>
       <property name="frameShape">
@@ -258,7 +258,7 @@ background-color: rgb(234, 234, 234);
             </property>
             <property name="styleSheet">
              <string notr="true">#frame_7{
-background-color: rgb(234, 234, 234);
+	background-color: rgb(255, 212, 125);
 }</string>
             </property>
             <property name="frameShape">
@@ -364,7 +364,7 @@ QListView::item:selected:!active {
                  <widget class="QWidget" name="widget_17" native="true">
                   <property name="styleSheet">
                    <string notr="true">#widget_17{
-background-color: rgb(234, 234, 234);
+	background-color: rgb(255, 212, 125);
 }</string>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -436,7 +436,7 @@ background-color:  rgb(234, 234, 234);
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Plain</enum>
          </property>
          <property name="lineWidth">
           <number>0</number>
@@ -737,7 +737,7 @@ background-color: rgb(255, 255, 255);
                      </property>
                      <property name="styleSheet">
                       <string notr="true">QWidget#widget_9{
-	background-color: rgba(255, 170, 0,100);
+	background-color: rgb(255, 212, 125);
 	border-radius: 20px;
 }</string>
                      </property>

@@ -32,7 +32,9 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">#Form{
+background-color: rgb(255, 255, 255);
+}</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
